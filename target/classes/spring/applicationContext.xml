@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"  
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:cache="http://www.springframework.org/schema/cache" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                     http://www.springframework.org/schema/beans/spring-beans.xsd  
+                     http://www.springframework.org/schema/context  
+                     http://www.springframework.org/schema/context/spring-context.xsd  
+                     http://www.springframework.org/schema/aop  
+                     http://www.springframework.org/schema/aop/spring-aop.xsd  
+                     http://www.springframework.org/schema/util  
+                     http://www.springframework.org/schema/util/spring-util.xsd  
+                     http://www.springframework.org/schema/cache  
+                     http://www.springframework.org/schema/cache/spring-cache.xsd  
+				     http://www.springframework.org/schema/task 
+				     http://www.springframework.org/schema/task/spring-task.xsd     
+                     http://www.springframework.org/schema/jee  
+                     http://www.springframework.org/schema/jee/spring-jee.xsd  
+                     http://www.springframework.org/schema/websocket   
+					 http://www.springframework.org/schema/websocket/spring-websocket.xsd
+                     http://www.springframework.org/schema/tx  
+                     http://www.springframework.org/schema/tx/spring-tx.xsd
+                     http://www.springframework.org/schema/data/mongo  
+            		 http://www.springframework.org/schema/data/mongo/spring-mongo.xsd 
+            		 http://www.springframework.org/schema/data/repository
+					 http://www.springframework.org/schema/data/repository/spring-repository.xsd
+                     http://www.springframework.org/schema/mvc
+					 http://www.springframework.org/schema/mvc/spring-mvc.xsd">  
+
+	 <!-- 数据库文件加密操作 -->
+    <!-- 
+	 <bean id="encryptPropertyConfigurer" class="com.application.base.core.security.DecryptPropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:/usr/local/configs/shop/jdbc_shop.properties</value>
+                <value>file:/usr/local/configs/base/jdbc.properties</value>
+                <value>file:/usr/local/configs/base/redis.properties</value>
+                <value>classpath*:/properties/config.properties</value>
+            </list>
+        </property>
+        <property name="encryptPropNames">
+            <list>
+                <value>mysql.write.username</value>
+                <value>mysql.write.password</value>
+                <value>mysql.read.username</value>
+                <value>mysql.read.password</value>
+            </list>
+        </property>
+        <property name="keyPath" value="/usr/local/key.k" />
+    </bean>
+     -->
+    
+    <!-- 引入配置文件, 系统的设置都放在这里进行设置 -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+		    <list>
+                <value>classpath:/properties/jdbc.properties</value>
+                <value>classpath:/properties/config.properties</value>
+                <value>classpath:/properties/redis.properties</value>
+                <value>classpath:/properties/mongo.properties</value>
+		    </list>
+        </property>
+	</bean>
+	
+	<!-- 引入配置文件 -->
+    <import resource="classpath:spring/applicationContext-base.xml"/>
+    <import resource="classpath:spring/applicationContext-dataSource.xml"/>
+    <import resource="classpath:spring/applicationContext-jobTask.xml"/>
+    <import resource="classpath:spring/applicationContext-mongo.xml"/>
+    <import resource="classpath:spring/applicationContext-redis.xml"/>
+    
+    <!-- 自动注册扫描文件 -->
+    <context:annotation-config/>
+    
+    <!-- 全包扫描 -->
+    <context:component-scan base-package="com.javabase.demo"/>
+    
+    <!--property工具-->
+    <bean id="property" class="com.application.base.utils.common.PropertiesUtils">
+        <property name="urls">
+            <list>
+                <value>properties/config.properties</value>
+                <value>properties/jdbc.properties</value>
+                <value>properties/redis.properties</value>
+                <value>config/message.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Spring Rest 使用 -->
+    <bean id="restTemple" class="org.springframework.web.client.RestTemplate">
+         <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <constructor-arg value="UTF-8"/>
+                </bean>
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+	<!-- MySQL读写库 -->
+    <bean id="sqlSessionFactoryDefault" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceDefault"/>
+       <!--  <property name="configLocation" value="classpath:/sqlmap/sqlmap-config.xml"/> -->
+       	<!-- 自动扫描目录下的所有SQL映射的xml文件 -->
+		<property name="mapperLocations" value="classpath:sqlmapper/*/*.xml" />
+		<property name="configLocation" value="classpath:spring/mybatis-config.xml" />
+    </bean>
+
+    <!-- MySQL读库 -->
+    <bean id="sqlSessionFactoryAread" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceAread"/>
+       <!--  <property name="configLocation" value="classpath:/sqlmap/sqlmap-config.xml"/> -->
+       	<!-- 自动扫描目录下的所有SQL映射的xml文件 -->
+		<property name="mapperLocations" value="classpath:sqlmapper/*/*.xml" />
+		<property name="configLocation" value="classpath:spring/mybatis-config.xml" />
+    </bean>
+
+    <!-- MySQL写库 -->
+    <bean id="sqlSessionFactoryAwrite" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceAwrite"/>
+       <!--  <property name="configLocation" value="classpath:/sqlmap/sqlmap-config.xml"/> -->
+       	<!-- 自动扫描目录下的所有SQL映射的xml文件 -->
+		<property name="mapperLocations" value="classpath:sqlmapper/*/*.xml" />
+		<property name="configLocation" value="classpath:spring/mybatis-config.xml" />
+    </bean>
+    
+    <!-- MySQL读库 -->
+    <bean id="sqlSessionFactoryBread" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceBread"/>
+       <!--  <property name="configLocation" value="classpath:/sqlmap/sqlmap-config.xml"/> -->
+       	<!-- 自动扫描目录下的所有SQL映射的xml文件 -->
+		<property name="mapperLocations" value="classpath:sqlmapper/*/*.xml" />
+		<property name="configLocation" value="classpath:spring/mybatis-config.xml" />
+    </bean>
+
+    <!-- MySQL写库 -->
+    <bean id="sqlSessionFactoryBwrite" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceBwrite"/>
+       <!--  <property name="configLocation" value="classpath:/sqlmap/sqlmap-config.xml"/> -->
+       	<!-- 自动扫描目录下的所有SQL映射的xml文件 -->
+		<property name="mapperLocations" value="classpath:sqlmapper/*/*.xml" />
+		<property name="configLocation" value="classpath:spring/mybatis-config.xml" />
+    </bean>
+    
+    
+    <!-- 读写DataSessionFactory配置 -->
+    <!--
+    <bean id="readAndWriteDataSessionFactory" class="com.application.base.core.datasource.impl.common.DefaultReadAndWriteDataSessionFactory">
+        <property name="support" ref="sqlSessionFactorySupport"/>
+        <property name="defaultDataSource" value="sqlsessionfactory.default"/>
+        <property name="readDataSource" value="sqlsessionfactory.read"/>
+        <property name="writeDataSource" value="sqlsessionfactory.write"/>
+    </bean>
+    -->
+    
+    <!-- 多数据源读写DataSessionFactory配置 -->
+    <bean id="readAndWriteDataSessionFactory" class="com.application.base.core.datasource.impl.cache.MutilDefaultCacheReadAndWriteDataSessionFactory">
+        <property name="support" ref="sqlSessionFactorySupport"/>
+        <property name="redisSessionFactory" ref="redisFactory"/>
+        <property name="defaultDataSource" value="sqlSessionFactoryDefault"/>
+    </bean>
+
+	<!-- default -->
+	<bean id="txManagerDefault" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceDefault"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="txManagerDefault"/>
+    
+    
+    <!-- setting -->
+    <bean id="txManagerASetting" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceAwrite"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="txManagerASetting"/>
+
+
+   <!-- setting -->
+    <bean id="txManagerBSetting" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceBwrite"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="txManagerBSetting"/>
+
+
+    <bean id="resultMessageListener" class="com.application.base.core.result.ResultMessageListener">
+        <property name="resultMessage" value="message/resultMessage.xml"/>
+    </bean>
+
+</beans>
+

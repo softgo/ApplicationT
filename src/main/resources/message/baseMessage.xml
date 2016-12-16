@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resultMessages>
+    <resultMessage key="SUCCESS" code="0" message="操作成功"/>
+    <resultMessage key="SYSTEM_ERROR" code="500" message="系统错误"/>
+    <resultMessage key="RESULT_INFO_NOTFOUND" code="404" message="结果消息不存在"/>
+    <resultMessage key="INF_EMPTY" code="405" message="参数不完整,请检查参数列表"/>
+    <resultMessage key="VALID_ERROR" code="406" message="参数格式不符合要求,请检查参数列表"/>
+</resultMessages>

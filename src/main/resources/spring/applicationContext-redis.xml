@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+   		http://www.springframework.org/schema/context 
+   		http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.pool.maxTotal}"/>
+        <property name="maxIdle" value="${redis.pool.maxIdle}"/>
+        <property name="minIdle" value="${redis.pool.minIdle}"/>
+        <property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
+        <property name="testOnReturn" value="${redis.pool.testOnReturn}"/>
+        <property name="testWhileIdle" value="${redis.pool.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${redis.pool.timeBetweenEvictionRunsMillis}"/>
+        <property name="numTestsPerEvictionRun" value="${redis.pool.numTestsPerEvictionRun}"/>
+    </bean>
+
+    <!-- redis的单点连接池pool，不是必选项：timeout/password  -->
+    <bean id = "jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg index="0" ref="jedisPoolConfig"/>
+        <constructor-arg index="1" value="${redis.host}"/>
+        <constructor-arg index="2" value="${redis.port}"/>
+        <!--timeout-->
+        <constructor-arg index="3" value="${redis.timeout}"/>
+        <!-- 如果没有设置redis密码,就不要去加这个属性,没有指定database,就不要加database设置 -->
+        <!--<constructor-arg index="4" value="${redis.password}"/>-->
+        <!--<constructor-arg index="5" value="${redis.database}"/>-->
+    </bean>
+    
+    <!--redis哨兵集群模式连接池,有几台 redis 的服务器可以采用这种方式配置 -->
+    <!--
+    <bean id="jedisPool" class="redis.clients.jedis.JedisSentinelPool">
+        <constructor-arg name="masterName" value="${redis.sentinel.mastername}"/>
+        <constructor-arg name="sentinels">
+            <set>
+                <value>${redis.sentinel.sentinel.A}</value>
+                <value>${redis.sentinel.sentinel.B}</value>
+            </set>
+        </constructor-arg>
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
+        <constructor-arg name="timeout" value="${redis.timeout}"/>
+    </bean>
+    -->
+
+    <bean id="redisFactory" class="com.application.base.redis.jedis.factory.JedisSimpleSessionFactory">
+        <property name="pool" ref="jedisPool"/>
+    </bean>
+    
+</beans>
+

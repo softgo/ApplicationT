@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+   		http://www.springframework.org/schema/context 
+   		http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 如果没有配置A,B,C这样的数据源,那么这个将是默认的数据源,读写在不分离 -->
+    <bean id="dataSourceDefault" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="${mysql.url}"/>
+        <property name="username" value="${mysql.username}"/>
+        <property name="password" value="${mysql.password}"/>
+        <property name="driverClassName" value="${mysql.driverClassName}"/>
+        <property name="filters" value="${mysql.filters}"/>
+        <property name="maxActive" value="${mysql.maxActive}"/>
+        <property name="initialSize" value="${mysql.initialSize}"/>
+        <property name="maxWait" value="${mysql.maxWait}"/>
+        <property name="minIdle" value="${mysql.minIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${mysql.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${mysql.minEvictableIdleTimeMillis}"/>
+        <property name="validationQuery" value="${mysql.validationQuery}"/>
+        <property name="testWhileIdle" value="${mysql.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${mysql.testOnBorrow}"/>
+        <property name="testOnReturn" value="${mysql.testOnReturn}"/>
+        <property name="maxOpenPreparedStatements" value="${mysql.maxOpenPreparedStatements}"/>
+        <property name="removeAbandoned" value="${mysql.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${mysql.removeAbandonedTimeout}"/>
+        <property name="logAbandoned" value="${mysql.logAbandoned}"/>
+    </bean>
+    
+    
+    <!-- 阿里 druid数据库连接池 -->
+    <bean id="dataSourceAread" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="url" value="${mysql.urlAread}"/>
+        <property name="username" value="${mysql.usernameAread}"/>
+        <property name="password" value="${mysql.passwordAread}"/>
+        <property name="driverClassName" value="${mysql.driverClassNameAread}"/>
+        <property name="filters" value="${mysql.filtersAread}"/>
+        <!-- 最大并发连接数 -->
+        <property name="maxActive" value="${mysql.maxActiveAread}"/>
+        <!-- 初始化连接数量 -->
+        <property name="initialSize" value="${mysql.initialSizeAread}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${mysql.maxWaitAread}"/>
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="${mysql.minIdleAread}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${mysql.timeBetweenEvictionRunsMillisAread}"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${mysql.minEvictableIdleTimeMillisAread}"/>
+        <property name="validationQuery" value="${mysql.validationQueryAread}"/>
+        <property name="testWhileIdle" value="${mysql.testWhileIdleAread}"/>
+        <property name="testOnBorrow" value="${mysql.testOnBorrowAread}"/>
+        <property name="testOnReturn" value="${mysql.testOnReturnAread}"/>
+        <property name="maxOpenPreparedStatements" value="${mysql.maxOpenPreparedStatementsAread}"/>
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="${mysql.removeAbandonedAread}"/>
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="${mysql.removeAbandonedTimeoutAread}"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="${mysql.logAbandonedAread}"/>
+    </bean>
+
+   <!-- 阿里 druid数据库连接池 -->
+    <bean id="dataSourceAwrite" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="url" value="${mysql.urlAwrite}"/>
+        <property name="username" value="${mysql.usernameAwrite}"/>
+        <property name="password" value="${mysql.passwordAwrite}"/>
+        <property name="driverClassName" value="${mysql.driverClassNameAwrite}"/>
+        <property name="filters" value="${mysql.filtersAwrite}"/>
+        <!-- 最大并发连接数 -->
+        <property name="maxActive" value="${mysql.maxActiveAwrite}"/>
+        <!-- 初始化连接数量 -->
+        <property name="initialSize" value="${mysql.initialSizeAwrite}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${mysql.maxWaitAwrite}"/>
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="${mysql.minIdleAwrite}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${mysql.timeBetweenEvictionRunsMillisAwrite}"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${mysql.minEvictableIdleTimeMillisAwrite}"/>
+        <property name="validationQuery" value="${mysql.validationQueryAwrite}"/>
+        <property name="testWhileIdle" value="${mysql.testWhileIdleAwrite}"/>
+        <property name="testOnBorrow" value="${mysql.testOnBorrowAwrite}"/>
+        <property name="testOnReturn" value="${mysql.testOnReturnAwrite}"/>
+        <property name="maxOpenPreparedStatements" value="${mysql.maxOpenPreparedStatementsAwrite}"/>
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="${mysql.removeAbandonedAwrite}"/>
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="${mysql.removeAbandonedTimeoutAwrite}"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="${mysql.logAbandonedAwrite}"/>
+    </bean>
+    
+    <!-- 阿里 druid数据库连接池 -->
+    <bean id="dataSourceBread" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="url" value="${mysql.urlBread}"/>
+        <property name="username" value="${mysql.usernameBread}"/>
+        <property name="password" value="${mysql.passwordBread}"/>
+        <property name="driverClassName" value="${mysql.driverClassNameBread}"/>
+        <property name="filters" value="${mysql.filtersBread}"/>
+        <!-- 最大并发连接数 -->
+        <property name="maxActive" value="${mysql.maxActiveBread}"/>
+        <!-- 初始化连接数量 -->
+        <property name="initialSize" value="${mysql.initialSizeBread}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${mysql.maxWaitBread}"/>
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="${mysql.minIdleBread}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${mysql.timeBetweenEvictionRunsMillisBread}"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${mysql.minEvictableIdleTimeMillisBread}"/>
+        <property name="validationQuery" value="${mysql.validationQueryBread}"/>
+        <property name="testWhileIdle" value="${mysql.testWhileIdleBread}"/>
+        <property name="testOnBorrow" value="${mysql.testOnBorrowBread}"/>
+        <property name="testOnReturn" value="${mysql.testOnReturnBread}"/>
+        <property name="maxOpenPreparedStatements" value="${mysql.maxOpenPreparedStatementsBread}"/>
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="${mysql.removeAbandonedBread}"/>
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="${mysql.removeAbandonedTimeoutBread}"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="${mysql.logAbandonedBread}"/>
+    </bean>
+
+   <!-- 阿里 druid数据库连接池 -->
+    <bean id="dataSourceBwrite" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="url" value="${mysql.urlBwrite}"/>
+        <property name="username" value="${mysql.usernameBwrite}"/>
+        <property name="password" value="${mysql.passwordBwrite}"/>
+        <property name="driverClassName" value="${mysql.driverClassNameBwrite}"/>
+        <property name="filters" value="${mysql.filtersBwrite}"/>
+        <!-- 最大并发连接数 -->
+        <property name="maxActive" value="${mysql.maxActiveBwrite}"/>
+        <!-- 初始化连接数量 -->
+        <property name="initialSize" value="${mysql.initialSizeBwrite}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${mysql.maxWaitBwrite}"/>
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="${mysql.minIdleBwrite}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${mysql.timeBetweenEvictionRunsMillisBwrite}"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${mysql.minEvictableIdleTimeMillisBwrite}"/>
+        <property name="validationQuery" value="${mysql.validationQueryBwrite}"/>
+        <property name="testWhileIdle" value="${mysql.testWhileIdleBwrite}"/>
+        <property name="testOnBorrow" value="${mysql.testOnBorrowBwrite}"/>
+        <property name="testOnReturn" value="${mysql.testOnReturnBwrite}"/>
+        <property name="maxOpenPreparedStatements" value="${mysql.maxOpenPreparedStatementsBwrite}"/>
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="${mysql.removeAbandonedBwrite}"/>
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="${mysql.removeAbandonedTimeoutBwrite}"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="${mysql.logAbandonedBwrite}"/>
+    </bean>
+    
+    
+</beans>
+

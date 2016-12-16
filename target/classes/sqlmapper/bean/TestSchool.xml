@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="TestSchool">
+
+	<!-- 输出列 -->
+	<sql id="baseColumnList">
+		u.id as id ,
+		u.disabled as disabled ,
+		u.uuid as uuid ,
+		u.create_time as createTime ,
+		u.update_time as updateTime ,
+		u.name as name ,
+		u.address as address ,
+		u.phone as phone ,
+		u.area as area 
+	</sql>
+	
+	
+	<!-- 查询的列 -->
+	<sql id="searchCriteria">
+		<if test="id != null and id !=-1  ">
+			and u.id = #{id,jdbcType=NUMERIC}
+		</if>
+		<if test="disabled != null and disabled !=-1  ">
+			and u.disabled = #{disabled,jdbcType=NUMERIC}
+		</if>
+		<if test="uuid != null and uuid != ''">
+			and u.uuid = #{uuid,jdbcType=VARCHAR}
+		</if>
+		<if test="uuidLike != null and uuidLike != ''">
+			and u.uuid like CONCAT('%',#{uuidLike,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="createTime != null ">
+			and u.create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateTime != null ">
+			and u.update_time = #{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="name != null and name != ''">
+			and u.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="nameLike != null and nameLike != ''">
+			and u.name like CONCAT('%',#{nameLike,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="address != null and address != ''">
+			and u.address = #{address,jdbcType=VARCHAR}
+		</if>
+		<if test="addressLike != null and addressLike != ''">
+			and u.address like CONCAT('%',#{addressLike,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="phone != null and phone != ''">
+			and u.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="phoneLike != null and phoneLike != ''">
+			and u.phone like CONCAT('%',#{phoneLike,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="area != null and area != ''">
+			and u.area = #{area,jdbcType=VARCHAR}
+		</if>
+		<if test="areaLike != null and areaLike != ''">
+			and u.area like CONCAT('%',#{areaLike,jdbcType=VARCHAR},'%') 
+		</if>
+	</sql>
+
+
+	<!-- 查询列表数据 -->
+	<select id="queryListResult" parameterType="java.util.Map" flushCache="false" resultType="com.javabase.demo.entity.TestSchool">
+		select
+			<include refid="baseColumnList" />
+		from
+			test_school u
+		where
+		    u.disabled = 0
+			<include refid="searchCriteria" />
+			<include refid="Util.orderCriteria" />
+			<include refid="Util.mysqlPage" />
+	</select>
+	
+	
+	<!-- 查询总数 -->
+	<select id="queryListResultCount" parameterType="java.util.Map" flushCache="false" resultType="java.lang.Integer">
+		select
+			count(u.id)
+		from
+			test_school u
+		where
+		    u.disabled = 0
+			<include refid="searchCriteria" />
+	</select>
+	
+	<!-- 查询所有列表数据 -->
+	<select id="queryAllListResult" parameterType="java.util.Map" flushCache="false" resultType="com.javabase.demo.entity.TestSchool">
+		select
+			<include refid="baseColumnList" />
+		from
+			test_school u
+		where
+		    u.disabled = 0
+			<include refid="searchCriteria" />
+			<include refid="Util.orderCriteria" />
+	</select>
+	
+	
+	<!-- 自定义查询列表where条件 -->
+	<select id="queryListResultByWhere" parameterType="java.util.Map" statementType="STATEMENT" flushCache="false" resultType="com.javabase.demo.entity.TestSchool">
+		select
+			<include refid="baseColumnList" />
+		from
+			test_school u
+		where
+		    u.disabled = 0
+		    <if test="whereSqlStr != null and whereSqlStr != ''">
+			and ${whereSqlStr}
+			</if>
+	</select>
+	
+	
+	<!-- 自定义查询列表where条件 -->
+	<select id="queryListResultCountByWhere" parameterType="java.util.Map" statementType="STATEMENT" flushCache="false" resultType="java.lang.Integer">
+		select
+			count(u.id)
+		from
+			test_school u
+		where
+		    u.disabled = 0
+			<if test="whereSqlStr != null and whereSqlStr != ''">
+			and ${whereSqlStr}
+			</if>
+	</select>
+	
+	
+	<!-- 查询一条数据 -->
+	<select id="querySingleResultById"  parameterType="java.lang.Integer"  flushCache="false" resultType="com.javabase.demo.entity.TestSchool">
+		select
+			<include refid="baseColumnList" />
+		from
+			test_school u
+		where
+		    u.disabled = 0
+			and u.id = #{id,jdbcType=NUMERIC}
+	</select>
+	
+	
+	<!-- 通过uuid查询 -->
+	<select id="querySingleResultByUUID" parameterType="java.lang.String" flushCache="false" resultType="com.javabase.demo.entity.TestSchool">
+		select
+			<include refid="baseColumnList" />
+		from
+			test_school u
+		where
+			 u.disabled = 0
+			and u.uuid = #{uuid,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<!-- 通过属性查询 -->
+	<select id="querySingleResultByParams" parameterType="java.util.Map" flushCache="false" resultType="com.javabase.demo.entity.TestSchool">
+		select
+			<include refid="baseColumnList" />
+		from
+			test_school u
+		where
+			u.disabled = 0
+			<include refid="searchCriteria" />
+	</select>
+
+
+	<!-- 保存对象,返回主键设置 -->
+	<insert id="saveObject" parameterType="com.javabase.demo.entity.TestSchool" useGeneratedKeys="true" keyProperty="id" keyColumn="id" flushCache="true" >
+		insert into test_school (
+			disabled,
+			uuid,
+			create_time,
+			update_time,
+			name,
+			address,
+			phone,
+			area
+		) values (
+			#{disabled,jdbcType=NUMERIC},
+			#{uuid,jdbcType=VARCHAR},
+			#{createTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			#{name,jdbcType=VARCHAR},
+			#{address,jdbcType=VARCHAR},
+			#{phone,jdbcType=VARCHAR},
+			#{area,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<insert id="saveBatchObject" parameterType="ArrayList" flushCache="true" >
+		insert into test_school (
+			disabled,
+			uuid,
+			create_time,
+			update_time,
+			name,
+			address,
+			phone,
+			area
+		) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.disabled,jdbcType=NUMERIC},
+			#{item.uuid,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.updateTime,jdbcType=TIMESTAMP},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.address,jdbcType=VARCHAR},
+			#{item.phone,jdbcType=VARCHAR},
+			#{item.area,jdbcType=VARCHAR}
+		)
+		</foreach>
+	</insert>
+
+
+	<!-- 修改 -->
+	<update id="updateObjectByID" flushCache="true" parameterType="com.javabase.demo.entity.TestSchool">
+		update test_school u
+		<set>
+			u.id = u.id
+		<if test="disabled != null and disabled !=-1 ">
+			, u.disabled = #{disabled,jdbcType=NUMERIC}
+		</if>
+		<if test="updateTime != null ">
+			, u.update_time = #{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="name != null and name != ''">
+			, u.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="address != null and address != ''">
+			, u.address = #{address,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null and phone != ''">
+			, u.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="area != null and area != ''">
+			, u.area = #{area,jdbcType=VARCHAR}
+		</if>
+		</set>
+		where
+            u.id = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="updateObjectByUUID" flushCache="true" parameterType="com.javabase.demo.entity.TestSchool">
+		update test_school u
+		<set>
+			u.uuid = u.uuid 
+		<if test="disabled != null and disabled !=-1 ">
+			, u.disabled = #{disabled,jdbcType=NUMERIC}
+		</if>
+		<if test="updateTime != null ">
+			, u.update_time = #{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="name != null and name != ''">
+			, u.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="address != null and address != ''">
+			, u.address = #{address,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null and phone != ''">
+			, u.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="area != null and area != ''">
+			, u.area = #{area,jdbcType=VARCHAR}
+		</if>
+		</set>
+		where
+            u.uuid = #{uuid,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<!-- 自定义修改列以及修改条件 -->
+	<update id="updateCustomColumnByWhere" flushCache="true" parameterType="java.util.Map" statementType="STATEMENT">
+		update test_school ${updateSqlStr} where ${whereSqlStr}
+	</update>
+	
+	
+	<!-- 逻辑删除 -->
+	<update id="logicDelete" flushCache="true" parameterType="java.util.Map">
+		update test_school u set u.disabled = 1
+		<if test="updateTime != null ">
+		    ,u.update_time = #{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateUser != null and updateUser != ''">
+            ,u.update_user = #{updateUser,jdbcType=NUMERIC}
+		</if>
+		where
+			<if test="id != null and id != ''">
+				u.id = #{id,jdbcType=NUMERIC}
+			</if>
+			<if test="id == null and uuid != null">
+				u.uuid = #{uuid,jdbcType=VARCHAR}
+			</if>
+			<if test="id == null and uuid == null">
+				u.id = null
+			</if>
+	</update>
+	
+	
+	<!-- 自定义逻辑条件 -->
+	<update id="logicWhereDelete" flushCache="true" parameterType="java.util.Map" statementType="STATEMENT">
+		update test_school set disabled = 1 where ${whereSqlStr}
+	</update>
+	
+	
+	<!-- 物理删除 -->
+	<delete id="physicalDelete" flushCache="true"  parameterType="java.lang.Integer"  >
+		delete from test_school where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	
+	
+	<!-- 自定义物理条件 -->
+	<delete id="physicalWhereDelete" flushCache="true" parameterType="java.util.Map" statementType="STATEMENT">
+		delete from test_school where ${whereSqlStr}
+	</delete>
+	
+	
+</mapper>

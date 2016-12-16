@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="ResultData">
+
+	<!-- 输出列 -->
+	<sql id="baseColumnList">
+		u.user_code as userCode ,
+		u.name as name ,
+		u.mobile as mobile ,
+		u.amount as amount ,
+		u.city as city ,
+		u.create_time as createTime 
+	</sql>
+	
+	
+	<!-- 查询的列 -->
+	<sql id="searchCriteria">
+		<if test="userCode != null and userCode !=-1  ">
+			and u.user_code = #{userCode,jdbcType=NUMERIC}
+		</if>
+		<if test="name != null and name != ''">
+			and u.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="nameLike != null and nameLike != ''">
+			and u.name like CONCAT('%',#{nameLike,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="mobile != null and mobile != ''">
+			and u.mobile = #{mobile,jdbcType=VARCHAR}
+		</if>
+		<if test="mobileLike != null and mobileLike != ''">
+			and u.mobile like CONCAT('%',#{mobileLike,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="amount != null and amount !=-1 ">
+			and u.amount = #{amount,jdbcType=DECIMAL}
+		</if>
+		<if test="city != null and city != ''">
+			and u.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="cityLike != null and cityLike != ''">
+			and u.city like CONCAT('%',#{cityLike,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="createTime != null ">
+			and u.create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+	</sql>
+
+
+	<!-- 查询列表数据 -->
+	<select id="queryListResult" parameterType="java.util.Map" flushCache="false" resultType="com.javabase.demo.entity.ResultData">
+		select
+			<include refid="baseColumnList" />
+		from
+			result_data u
+		where
+			1=1 
+			<include refid="searchCriteria" />
+			<include refid="Util.orderCriteria" />
+			<include refid="Util.mysqlPage" />
+	</select>
+	
+	
+	<!-- 查询总数 -->
+	<select id="queryListResultCount" parameterType="java.util.Map" flushCache="false" resultType="java.lang.Integer">
+		select
+			count(u.user_code)
+		from
+			result_data u
+		where
+			1=1 
+			<include refid="searchCriteria" />
+	</select>
+	
+	<!-- 查询所有列表数据 -->
+	<select id="queryAllListResult" parameterType="java.util.Map" flushCache="false" resultType="com.javabase.demo.entity.ResultData">
+		select
+			<include refid="baseColumnList" />
+		from
+			result_data u
+		where
+			1=1 
+			<include refid="searchCriteria" />
+			<include refid="Util.orderCriteria" />
+	</select>
+	
+	
+	<!-- 自定义查询列表where条件 -->
+	<select id="queryListResultByWhere" parameterType="java.util.Map" statementType="STATEMENT" flushCache="false" resultType="com.javabase.demo.entity.ResultData">
+		select
+			<include refid="baseColumnList" />
+		from
+			result_data u
+		where
+			1=1 
+		    <if test="whereSqlStr != null and whereSqlStr != ''">
+			and ${whereSqlStr}
+			</if>
+	</select>
+	
+	
+	<!-- 自定义查询列表where条件 -->
+	<select id="queryListResultCountByWhere" parameterType="java.util.Map" statementType="STATEMENT" flushCache="false" resultType="java.lang.Integer">
+		select
+			count(u.user_code)
+		from
+			result_data u
+		where
+			1=1 
+			<if test="whereSqlStr != null and whereSqlStr != ''">
+			and ${whereSqlStr}
+			</if>
+	</select>
+	
+	
+	<!-- 查询一条数据 -->
+	<select id="querySingleResultById"  parameterType="java.lang.Integer"  flushCache="false" resultType="com.javabase.demo.entity.ResultData">
+		select
+			<include refid="baseColumnList" />
+		from
+			result_data u
+		where
+			1=1 
+			and u.user_code = #{userCode,jdbcType=NUMERIC}
+	</select>
+	
+	
+	
+	
+	<!-- 通过属性查询 -->
+	<select id="querySingleResultByParams" parameterType="java.util.Map" flushCache="false" resultType="com.javabase.demo.entity.ResultData">
+		select
+			<include refid="baseColumnList" />
+		from
+			result_data u
+		where
+			1=1 
+			<include refid="searchCriteria" />
+	</select>
+
+
+	<!-- 保存对象,返回主键设置 -->
+	<insert id="saveObject" parameterType="com.javabase.demo.entity.ResultData" useGeneratedKeys="true" keyProperty="userCode" keyColumn="user_code" flushCache="true" >
+		insert into result_data (
+			name,
+			mobile,
+			amount,
+			city,
+			create_time
+		) values (
+			#{name,jdbcType=VARCHAR},
+			#{mobile,jdbcType=VARCHAR},
+			#{amount,jdbcType=DECIMAL},
+			#{city,jdbcType=VARCHAR},
+			#{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	
+	<insert id="saveBatchObject" parameterType="ArrayList" flushCache="true" >
+		insert into result_data (
+			name,
+			mobile,
+			amount,
+			city,
+			create_time
+		) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.name,jdbcType=VARCHAR},
+			#{item.mobile,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=DECIMAL},
+			#{item.city,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP}
+		)
+		</foreach>
+	</insert>
+
+
+	<!-- 修改 -->
+	<update id="updateObjectByID" flushCache="true" parameterType="com.javabase.demo.entity.ResultData">
+		update result_data u
+		<set>
+			u.user_code = u.user_code
+		<if test="userCode != null and userCode !=-1 ">
+			, u.user_code = #{userCode,jdbcType=NUMERIC}
+		</if>
+		<if test="name != null and name != ''">
+			, u.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="mobile != null and mobile != ''">
+			, u.mobile = #{mobile,jdbcType=VARCHAR}
+		</if>
+		<if test="amount != null and amount !=-1 ">
+			, u.amount = #{amount,jdbcType=DECIMAL}
+		</if>
+		<if test="city != null and city != ''">
+			, u.city = #{city,jdbcType=VARCHAR}
+		</if>
+		</set>
+		where
+            u.user_code = #{userCode,jdbcType=NUMERIC}
+	</update>
+	
+	
+	
+	
+	<!-- 自定义修改列以及修改条件 -->
+	<update id="updateCustomColumnByWhere" flushCache="true" parameterType="java.util.Map" statementType="STATEMENT">
+		update result_data ${updateSqlStr} where ${whereSqlStr}
+	</update>
+	
+	
+	
+	
+	<!-- 物理删除 -->
+	<delete id="physicalDelete" flushCache="true"  parameterType="java.lang.Integer"  >
+		delete from result_data where user_code = #{userCode,jdbcType=NUMERIC}
+	</delete>
+	
+	
+	<!-- 自定义物理条件 -->
+	<delete id="physicalWhereDelete" flushCache="true" parameterType="java.util.Map" statementType="STATEMENT">
+		delete from result_data where ${whereSqlStr}
+	</delete>
+	
+	
+</mapper>

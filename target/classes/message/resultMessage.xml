@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resultMessages>
+
+	<!-- 通用信息设置 -->
+	<resultMessage code="000000" key="GET_RESULT_IS_NULL" message="查询获得的结果为空"/>
+	<resultMessage code="111111" key="OPERATE_ACTION_IS_FAILD" message="CRUD操作失败"/>
+	<resultMessage code="222222" key="GET_RESULT_COUNT_FAILD" message="查询总个数失败"/>
+
+
+</resultMessages>
