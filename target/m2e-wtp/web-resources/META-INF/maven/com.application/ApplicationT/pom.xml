@@ -312,7 +312,7 @@
         <dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-webmvc</artifactId>
-		    <version>4.2.6.RELEASE</version>
+		    <version>5.2.20.RELEASE</version>
 		</dependency>
 		<!-- Spring为JDBC、Hibernate、JDO、JPA等提供的一致的声明式和编程式事务管理 -->
 		<dependency>
